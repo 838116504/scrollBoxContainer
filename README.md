@@ -1,6 +1,7 @@
 # scrollBoxContainer
  Godot plugin. Use for title bar.
 
+Need MyTheme plugin.
 
 # Document
 [Chinese document link](https://shimo.im/docs/gtkDWH3QDVQHc3CX/)
