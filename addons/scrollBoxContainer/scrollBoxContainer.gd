@@ -29,7 +29,7 @@ enum { MOUSE_OUT = 0, MOUSE_IN_FIRST_BTN, MOUSE_IN_SECOND_BTN }
 var mouseIn := MOUSE_OUT
 var arrowBtnPressed = null
 
-func get_class() -> String:
+static func get_class_static() -> String:
 	return CLASS_NAME
 
 func get_parent_class():
@@ -436,7 +436,7 @@ func get_vertical() -> bool:
 
 func _set(p_property:String, p_value):
 	var array = p_property.split("/", true, 1)
-	if array.size() < 2 || array[0] != get_class():
+	if array.size() < 2 || array[0] != get_class_static():
 		return false
 	
 	if BOOL_THEME_NAMES.has(array[1]):
@@ -465,7 +465,7 @@ func _set(p_property:String, p_value):
 
 func _get(p_property:String):
 	var array = p_property.split("/", true, 1)
-	if array.size() < 2 || array[0] != get_class():
+	if array.size() < 2 || array[0] != get_class_static():
 		return null
 	
 	if BOOL_THEME_NAMES.has(array[1]):
@@ -481,9 +481,9 @@ func _get(p_property:String):
 func _get_property_list():
 	var ret = []
 	if has_constant_override("item_separation"):
-		ret.append({ "name":get_class() + "/item_separation", "type":TYPE_INT, "usage":PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CHECKABLE | PROPERTY_USAGE_CHECKED })
+		ret.append({ "name":get_class_static() + "/item_separation", "type":TYPE_INT, "usage":PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CHECKABLE | PROPERTY_USAGE_CHECKED })
 	else:
-		ret.append({ "name":get_class() + "/item_separation", "type":TYPE_INT, "usage":PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_CHECKABLE })
+		ret.append({ "name":get_class_static() + "/item_separation", "type":TYPE_INT, "usage":PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_CHECKABLE })
 	_property_list_add_bool(ret, "drag_enable")
 	_property_list_add_bool(ret, "mid_button_scroll_enable")
 	_property_list_add_style(ret, "left_button_normal")
@@ -497,21 +497,21 @@ func _get_property_list():
 
 func _property_list_add_bool(p_list:Array, p_name:String):
 	if ControlMethod.has_bool_override(self, p_name):
-		p_list.append({ "name":get_class() + "/" + p_name, "type":TYPE_BOOL, "usage":PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CHECKABLE | PROPERTY_USAGE_CHECKED })
+		p_list.append({ "name":get_class_static() + "/" + p_name, "type":TYPE_BOOL, "usage":PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CHECKABLE | PROPERTY_USAGE_CHECKED })
 	else:
-		p_list.append({ "name":get_class() + "/" + p_name, "type":TYPE_BOOL, "usage":PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_CHECKABLE })
+		p_list.append({ "name":get_class_static() + "/" + p_name, "type":TYPE_BOOL, "usage":PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_CHECKABLE })
 
 func _property_list_add_icon(p_list:Array, p_name:String):
 	if has_icon_override(p_name):
-		p_list.append({ "name":get_class() + "/" + p_name, "type":TYPE_OBJECT, "hint":PROPERTY_HINT_RESOURCE_TYPE, "hint_string":"Texture", "usage":PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CHECKABLE | PROPERTY_USAGE_CHECKED })
+		p_list.append({ "name":get_class_static() + "/" + p_name, "type":TYPE_OBJECT, "hint":PROPERTY_HINT_RESOURCE_TYPE, "hint_string":"Texture", "usage":PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CHECKABLE | PROPERTY_USAGE_CHECKED })
 	else:
-		p_list.append({ "name":get_class() + "/" + p_name, "type":TYPE_OBJECT, "hint":PROPERTY_HINT_RESOURCE_TYPE, "hint_string":"Texture", "usage":PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_CHECKABLE })
+		p_list.append({ "name":get_class_static() + "/" + p_name, "type":TYPE_OBJECT, "hint":PROPERTY_HINT_RESOURCE_TYPE, "hint_string":"Texture", "usage":PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_CHECKABLE })
 
 func _property_list_add_style(p_list:Array, p_name:String):
 	if has_stylebox_override(p_name):
-		p_list.append({ "name":get_class() + "/" + p_name, "type":TYPE_OBJECT, "hint":PROPERTY_HINT_RESOURCE_TYPE, "hint_string":"StyleBox", "usage":PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CHECKABLE | PROPERTY_USAGE_CHECKED })
+		p_list.append({ "name":get_class_static() + "/" + p_name, "type":TYPE_OBJECT, "hint":PROPERTY_HINT_RESOURCE_TYPE, "hint_string":"StyleBox", "usage":PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CHECKABLE | PROPERTY_USAGE_CHECKED })
 	else:
-		p_list.append({ "name":get_class() + "/" + p_name, "type":TYPE_OBJECT, "hint":PROPERTY_HINT_RESOURCE_TYPE, "hint_string":"StyleBox", "usage":PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_CHECKABLE })
+		p_list.append({ "name":get_class_static() + "/" + p_name, "type":TYPE_OBJECT, "hint":PROPERTY_HINT_RESOURCE_TYPE, "hint_string":"StyleBox", "usage":PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_CHECKABLE })
 
 static func _register_default_theme(p_theme:MyTheme):
 	p_theme.set_constant("item_separation", CLASS_NAME, DEFAULT_ITEM_SEPARATION)
@@ -528,30 +528,30 @@ static func _register_default_theme(p_theme:MyTheme):
 
 func has_constant(p_name:String, p_type:String = "") -> bool:
 	if p_type == "" && not has_constant_override(p_name) && p_name == "item_separation":
-		p_type = get_class()
+		p_type = get_class_static()
 	return .has_constant(p_name, p_type)
 
 func has_icon(p_name:String, p_type:String = "") -> bool:
 	if p_type == "" && not has_icon_override(p_name):
-		p_type = get_class()
+		p_type = get_class_static()
 	return .has_icon(p_name, p_type)
 
 func has_stylebox(p_name:String, p_type:String = "") -> bool:
 	if p_type == "" && not has_stylebox_override(p_name) && STYLE_THEME_NAMES.has(p_name):
-		p_type = get_class()
+		p_type = get_class_static()
 	return .has_stylebox(p_name, p_type)
 
 func get_constant(p_name:String, p_type:String = ""):
 	if p_type == "" && not has_constant_override(p_name) && p_name == "item_separation":
-		p_type = get_class()
+		p_type = get_class_static()
 	return .get_constant(p_name, p_type)
 
 func get_icon(p_name:String, p_type:String = ""):
 	if p_type == "" && not has_icon_override(p_name) && ICON_THEME_NAMES.has(p_name):
-		p_type = get_class()
+		p_type = get_class_static()
 	return .get_icon(p_name, p_type)
 
 func get_stylebox(p_name:String, p_type:String = ""):
 	if p_type == "" && not has_stylebox_override(p_name) && STYLE_THEME_NAMES.has(p_name):
-		p_type = get_class()
+		p_type = get_class_static()
 	return .get_stylebox(p_name, p_type)
